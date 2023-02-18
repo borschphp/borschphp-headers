@@ -1,0 +1,33 @@
+{
+  "name": "borschphp/headers",
+  "description": "A library to help deal with headers.",
+  "keywords": [
+    "header",
+    "headers",
+    "psr-7",
+    "psr-17"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexandre DEBUSSCHERE",
+      "email": "alexandre.debusschere@hey.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4||^8.0"
+  },
+  "require-dev": {
+    "pestphp/pest": "^1.22"
+  },
+  "autoload": {
+    "psr-4": {
+      "Borsch\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "BorschTest\\": "tests/"
+    }
+  }
+}
