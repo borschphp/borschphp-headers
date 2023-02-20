@@ -26,22 +26,12 @@ class HeadersMap implements Countable, IteratorAggregate
 
     public function add(Header ...$headers): void
     {
-        $indexes = array_map(fn(Header $header) => strtolower($header->getName()), $headers);
-        $indexes_extended = array_merge(array_keys($this->headers), $indexes);
-
-        foreach (array_count_values($indexes_extended) as $index => $count) {
-            if ($count > 1) {
-                throw new InvalidArgumentException(sprintf(
-                    'The header with name "%s" has been provided %d times, header name must be unique.',
-                    $index,
-                    $count
-                ));
-            }
-        }
-
         $this->headers = array_merge(
             $this->headers,
-            array_combine($indexes, $headers)
+            array_combine(
+                array_map(fn(Header $header) => strtolower($header->getName()), $headers),
+                $headers
+            )
         );
     }
 
@@ -50,9 +40,9 @@ class HeadersMap implements Countable, IteratorAggregate
         return in_array(strtolower($name), array_keys($this->headers));
     }
 
-    public function get(string $name): ?Header
+    public function get(string $name): Header
     {
-        return $this->headers[strtolower($name)] ?? null;
+        return $this->headers[strtolower($name)] ??= new Header($name);
     }
 
     public function remove(string $name): void

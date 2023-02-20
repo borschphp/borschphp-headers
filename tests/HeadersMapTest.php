@@ -3,19 +3,6 @@
 use Borsch\Http\Header;
 use Borsch\Http\HeadersMap;
 
-test('constructor throws exception when headers with same name', function () {
-    $header = new Header('Content-Type', 'application/json');
-    $other = new Header('Content-Type', 'application/json');
-
-    new HeadersMap($header, $other);
-})->throws(InvalidArgumentException::class);
-
-test('add() throws exception when headers with same name', function () {
-    $header = new Header('Content-Type', 'application/json');
-
-    (new HeadersMap($header))->add(new Header('Content-Type', 'application/json'));
-})->throws(InvalidArgumentException::class);
-
 test('add() should append one Header instance to the collection', function () {
     $headers = new class(new Header('Content-Type', 'application/json')) extends HeadersMap {
         public function getHeaders() { return $this->headers; }
@@ -115,8 +102,11 @@ test('get() returns Header instance case-insensitive', function () {
         ->and($headers->get('ACCEPT-ENCODING')->getValues())->toMatchArray(['gzip', 'deflate']);
 });
 
-test('get() returns null if not found', function () {
-    expect((new HeadersMap())->get('accept-encoding'))->toBeNull();
+test('get() returns new Header instance if not found', function () {
+    $headers = new HeadersMap();
+    expect($headers)->get('accept-encoding')->toBeInstanceOf(Header::class)
+        ->and($headers->get('accept-encoding'))->toBeInstanceOf(Header::class)
+        ->and($headers->get('accept-encoding')->getValues())->toBeEmpty();
 });
 
 test('remove() unset Header instance case-sensitive', function () {
